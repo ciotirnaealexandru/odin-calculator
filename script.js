@@ -22,7 +22,20 @@ let clear = document.querySelector(".AC");
 let equals = document.querySelector(".equals");
 let question = document.querySelector(".question");
 
-let firstNumber = 0, operation, operationState = false, secondNumber = null;
+let firstNumber = 0, operation, operationState = false, secondNumber = null, errorFlag = false;
+
+function clearEcuation () {
+    firstNumber = 0;
+    secondNumber = null;
+    operationState = false;
+    output.textContent = "0";
+}
+
+function displayError (string) {
+    clearEcuation();
+    errorFlag = true;
+    output.textContent = string;
+}
 
 function add (a, b) {
     return a + b;
@@ -42,25 +55,13 @@ function divide (a, b) {
     return Math.round(a / b * 1000) / 1000;
 }
 
-function mod (a, b){
-    if ( parseInt(firstNumber) === firstNumber && 
-         parseInt(secondNumber) === secondNumber &&
-         firstNumber >= 0 && secondNumber >=0 )
-        return a % b;
+function mod(a, b) {
+    if (b == 0)
+        displayError("Serios?");
+    else if (a < 0 || b < 0 || isNaN(a) || isNaN(b))
+        displayError("Invalid input");
     else
-        displayError("Not natural numbers");
-}
-
-function clearEcuation () {
-    firstNumber = 0;
-    secondNumber = null;
-    operationState = false;
-    output.textContent = "0";
-}
-
-function displayError (string) {
-    clearEcuation();
-    output.textContent = string;
+        return a % b;
 }
 
 function outputEcuation () {
@@ -122,7 +123,10 @@ function operate () {
         }
     }
 
-    output.textContent = firstNumber;
+    if (errorFlag == false)
+        output.textContent = firstNumber;
+    else
+        errorFlag = false;
 }
 
 function changeOperation (newOperation) {
@@ -131,7 +135,8 @@ function changeOperation (newOperation) {
         operation = newOperation;
     }
     else {
-        operate();
+        if (secondNumber != null)
+            operate();
         operation = newOperation;
     }
     outputEcuation();
@@ -194,8 +199,10 @@ clear.addEventListener("click", () => {
 
 equals.addEventListener("click", () => {
     operate();
+    operationState = false;
 });
 
 question.addEventListener("click", () => {
     displayError("Doi scheleti se trag de...");
+    errorFlag = false;
 });
