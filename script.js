@@ -130,16 +130,18 @@ function operate () {
 }
 
 function changeOperation (newOperation) {
-    if (operationState == false) {
-        operationState = true;
-        operation = newOperation;
+    if (errorFlag == false) {
+        if (operationState == false) {
+            operationState = true;
+            operation = newOperation;
+        }
+        else {
+            if (secondNumber != null)
+                operate();
+            operation = newOperation;
+        }
+        outputEcuation();
     }
-    else {
-        if (secondNumber != null)
-            operate();
-        operation = newOperation;
-    }
-    outputEcuation();
 }
 
 zero.addEventListener("click", () => {
@@ -204,5 +206,4 @@ equals.addEventListener("click", () => {
 
 question.addEventListener("click", () => {
     displayError("Doi scheleti se trag de...");
-    errorFlag = false;
 });
