@@ -61,7 +61,7 @@ function mod(a, b) {
     else if (a < 0 || b < 0 || isNaN(a) || isNaN(b))
         displayError("Invalid input");
     else
-        return a % b;
+        return Math.round(a % b * 1000) / 1000;
 }
 
 function outputEcuation () {
