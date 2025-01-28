@@ -67,8 +67,10 @@ function divide (firstString, secondString) {
     let a = parseInt(firstString);
     let b = parseInt(secondString);
 
-    if (b == 0)
-        return "Pe bune?"
+    if (b == 0) {
+        displayError("Mama m-ai spart...");
+        return "0";
+    }
     else
         return (Math.round(a / b * 1000) / 1000).toString();
 }
@@ -77,10 +79,14 @@ function mod(firstString, secondString) {
     let a = parseInt(firstString);
     let b = parseInt(secondString);
 
-    if (b == 0)
-        displayError("Serios?");
-    else if (a < 0 || b < 0 || isNaN(a) || isNaN(b))
-        displayError("Invalid input");
+    if (b == 0) {
+        displayError("Pe bune?");
+        return "0";
+    }
+    else if (a < 0 || b < 0 || isNaN(a) || isNaN(b)) {
+        displayError("Gandeste pozitiv!");
+        return "0";
+    }
     else
         return (Math.round(a % b * 1000) / 1000).toString();
 }
@@ -127,33 +133,29 @@ function addComma () {
 function operate () {
     if (errorState == false) {
         if (operationState == true) {
-            if (operation == "+") {
-                firstNumber = add(firstNumber, secondNumber);
-                secondNumber = "";
-            }
+            if (secondNumberState == true) {
+                if (operation == "+")
+                    firstNumber = add(firstNumber, secondNumber);
 
-            if (operation == "-") {
-                firstNumber = subtract(firstNumber, secondNumber);
-                secondNumber = "";
-            }
+                if (operation == "-")
+                    firstNumber = subtract(firstNumber, secondNumber);
 
-            if (operation == "×") {
-                firstNumber = multiply(firstNumber, secondNumber);
-                secondNumber = "";
-            }
+                if (operation == "×")
+                    firstNumber = multiply(firstNumber, secondNumber);
 
-            if (operation == "÷") {
-                firstNumber = divide(firstNumber, secondNumber);
-                secondNumber = "";
-            }
+                if (operation == "÷")
+                    firstNumber = divide(firstNumber, secondNumber);
 
-            if (operation == "%") {
-                firstNumber = mod(firstNumber, secondNumber);
-                secondNumber = "";
+                if (operation == "%")
+                    firstNumber = mod(firstNumber, secondNumber);
             }
+            
+            secondNumber = "";
+            secondNumberState = false;
         }
     }
-    if (errorState == false)
+
+    if (errorState == false) 
         output.textContent = firstNumber;
 }
 
@@ -169,9 +171,9 @@ function changeOperation (newOperation) {
         }
         else
             operation = newOperation;
-        
-        outputEcuation();
     }
+    if (errorState == false) 
+        outputEcuation();
 }
 
 zero.addEventListener("click", () => {
