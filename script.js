@@ -111,7 +111,10 @@ function outputEquation () {
         equation += " " + secondNumber;
     }
 
-    output.textContent = equation;
+    if (firstNumber.length <= 12 && secondNumber.length <= 12)
+        output.textContent = equation;
+    else
+        displayError("E prea lung, spunea ea...");
 }
 
 function addDigit (digit) {
@@ -230,8 +233,12 @@ function operate () {
         }
     }
 
-    if (errorState == false) 
-        output.textContent = firstNumber;
+    if (errorState == false) {
+        if (firstNumber.length <= 12)
+            output.textContent = firstNumber;
+        else
+            displayError("E prea lung, spunea ea...");
+    }
 }
 
 function changeOperation (newOperation) {
