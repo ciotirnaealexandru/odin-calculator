@@ -27,45 +27,50 @@ let firstNumber = "0", secondNumber = "", secondNumberState = false;
 let operation, operationState = false;
 let errorState = false;
 let firstCommaState = false, secondCommaState = false;
+let firstSignState = true, secondSignState = true;
 
-function clearEcuation () {
+function clearEquation () {
     firstNumber = "0";
     secondNumber = "";
     operationState = false;
     secondNumberState = false;
+    firstCommaState = false;
+    secondCommaState = false;
+    firstSignState = true;
+    secondSignState = true;
     output.textContent = "0";
 }
 
 function displayError (string) {
-    clearEcuation();
+    clearEquation();
     errorState = true;
     output.textContent = string;
 }
 
 function add (firstString, secondString) {
-    let a = parseInt(firstString);
-    let b = parseInt(secondString);
+    let a = parseFloat(firstString);
+    let b = parseFloat(secondString);
 
     return (a + b).toString();
 }
 
 function subtract (firstString, secondString) {
-    let a = parseInt(firstString);
-    let b = parseInt(secondString);
+    let a = parseFloat(firstString);
+    let b = parseFloat(secondString);
 
     return (a - b).toString();
 }
 
 function multiply (firstString, secondString) {
-    let a = parseInt(firstString);
-    let b = parseInt(secondString);
+    let a = parseFloat(firstString);
+    let b = parseFloat(secondString);
 
     return (a * b).toString();
 }
 
 function divide (firstString, secondString) {
-    let a = parseInt(firstString);
-    let b = parseInt(secondString);
+    let a = parseFloat(firstString);
+    let b = parseFloat(secondString);
 
     if (b == 0) {
         displayError("Mama m-ai spart...");
@@ -76,8 +81,8 @@ function divide (firstString, secondString) {
 }
 
 function mod(firstString, secondString) {
-    let a = parseInt(firstString);
-    let b = parseInt(secondString);
+    let a = parseFloat(firstString);
+    let b = parseFloat(secondString);
 
     if (b == 0) {
         displayError("Pe bune?");
@@ -91,14 +96,20 @@ function mod(firstString, secondString) {
         return (Math.round(a % b * 1000) / 1000).toString();
 }
 
-function outputEcuation () {
+function outputEquation () {
     let equation = firstNumber;
+    if (firstSignState == false)
+        equation = "(" + firstNumber + ")";
 
     if (operationState == true)
         equation += " " + operation;
 
-    if (secondNumberState == true)
+    if (secondNumberState == true) {
+        if (secondSignState == false)
+            equation += " (" + secondNumber + ")";
+        else
         equation += " " + secondNumber;
+    }
 
     output.textContent = equation;
 }
@@ -122,12 +133,64 @@ function addDigit (digit) {
                 secondNumber = secondNumber + digit;
         }
 
-        outputEcuation();
+        outputEquation();
     }
 }
 
 function addComma () {
-    
+    if (errorState == false) {
+        //daca ma aflu la primul numar
+        if (operationState == false) {
+            if (firstCommaState == false) {
+                firstCommaState = true;
+                firstNumber += ".";
+            }
+        }
+        //al doilea numar
+        else {
+            if (secondCommaState == false) {
+                secondCommaState = true;
+                if (secondNumberState == false) {
+                    secondNumber = "0.";
+                    secondNumberState = true;
+                }
+                else {
+                    secondNumber += ".";
+                }
+            }
+        }
+
+        outputEquation();
+    }
+}
+
+function changeSign () {
+    if (errorState == false) {
+        //daca ma aflu la primul numar
+        if (operationState == false) {
+            if (firstSignState == true) {
+                firstSignState = false;
+                firstNumber = "-" + firstNumber;
+            }
+            else {
+                firstSignState = true;
+                firstNumber = (parseFloat(firstNumber) * (-1)).toString();
+            }
+        }
+        //al doilea numar
+        else if (secondNumberState == true) {
+            if (secondSignState == true) {
+                secondSignState = false;
+                secondNumber = "-" + secondNumber;
+            }
+            else {
+                secondSignState = true;
+                secondNumber = (parseFloat(secondNumber) * (-1)).toString();
+            }
+        }
+
+        outputEquation();
+    }
 }
 
 function operate () {
@@ -150,8 +213,20 @@ function operate () {
                     firstNumber = mod(firstNumber, secondNumber);
             }
             
+            if (firstNumber < 0)
+                firstSignState = false;
+            else
+                firstSignState = true;
+
+            if (parseInt(firstNumber) === firstNumber)
+                firstCommaState = false;
+            else
+                firstCommaState = true;
+            
             secondNumber = "";
             secondNumberState = false;
+
+            secondCommaState = false;
         }
     }
 
@@ -173,7 +248,7 @@ function changeOperation (newOperation) {
             operation = newOperation;
     }
     if (errorState == false) 
-        outputEcuation();
+        outputEquation();
 }
 
 zero.addEventListener("click", () => {
@@ -224,7 +299,7 @@ modButton.addEventListener("click", () => {
 });
 
 clear.addEventListener("click", () => {
-    clearEcuation();
+    clearEquation();
     errorState = false;
 });
 equals.addEventListener("click", () => {
@@ -233,6 +308,9 @@ equals.addEventListener("click", () => {
 });
 comma.addEventListener("click", () => {
     addComma();
+});
+sign.addEventListener("click", () => {
+    changeSign();
 });
 question.addEventListener("click", () => {
     displayError("Doi scheleti se trag de...");
