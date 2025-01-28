@@ -171,24 +171,28 @@ function changeSign () {
     if (errorState == false) {
         //daca ma aflu la primul numar
         if (operationState == false) {
-            if (firstSignState == true) {
-                firstSignState = false;
-                firstNumber = "-" + firstNumber;
-            }
-            else {
-                firstSignState = true;
-                firstNumber = (parseFloat(firstNumber) * (-1)).toString();
+            if (firstNumber != 0) {
+                if (firstSignState == true) {
+                    firstSignState = false;
+                    firstNumber = "-" + firstNumber;
+                }
+                else {
+                    firstSignState = true;
+                    firstNumber = (parseFloat(firstNumber) * (-1)).toString();
+                }
             }
         }
         //al doilea numar
         else if (secondNumberState == true) {
-            if (secondSignState == true) {
-                secondSignState = false;
-                secondNumber = "-" + secondNumber;
-            }
-            else {
-                secondSignState = true;
-                secondNumber = (parseFloat(secondNumber) * (-1)).toString();
+            if (secondNumber != 0) {
+                if (secondSignState == true) {
+                    secondSignState = false;
+                    secondNumber = "-" + secondNumber;
+                }
+                else {
+                    secondSignState = true;
+                    secondNumber = (parseFloat(secondNumber) * (-1)).toString();
+                }
             }
         }
 
